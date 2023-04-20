@@ -4,16 +4,25 @@ import HomePage from "./pages/HomePage"
 import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
 import TransactionsPage from "./pages/TransactionPage"
+import AuthRoute from "./components/AuthRoute"
+import PersistLogin from "./components/PersistLogin"
+import RequireAuth from "./components/RequireAuth"
 
 export default function App() {
   return (
     <PagesContainer>
-        <Routes>
-          <Route path="/" element={<SignInPage />} />
+      <Routes>
+        <Route path="/" element={<AuthRoute />} >
+          <Route path="/" element={<SignInPage />} exact />
           <Route path="/cadastro" element={<SignUpPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />
-        </Routes>
+        </Route>
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />
+          </Route>
+        </Route>
+      </Routes>
     </PagesContainer>
   )
 }
