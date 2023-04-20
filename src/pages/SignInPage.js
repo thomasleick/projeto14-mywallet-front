@@ -8,8 +8,6 @@ import useAuth from '../hooks/useAuth';
 import axios from '../api/axios';
 const LOGIN_URL = '/login';
 
-
-
 export default function SignInPage() {
   const { setAuth } = useAuth();
   const [email, resetEmail, emailAttribs] = useInput('email', '')
