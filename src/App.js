@@ -12,11 +12,12 @@ export default function App() {
   return (
     <PagesContainer>
       <Routes>
+      <Route element={<PersistLogin />}>
         <Route path="/" element={<AuthRoute />} >
           <Route path="/" element={<SignInPage />} exact />
           <Route path="/cadastro" element={<SignUpPage />} />
         </Route>
-        <Route element={<PersistLogin />}>
+        {/*<Route element={<PersistLogin />}>*/}
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<HomePage />} />
             <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />

@@ -1,0 +1,34 @@
+import React from 'react';
+import styled from 'styled-components';
+
+const Transaction = (props) => {
+    const { data, description, type, value } = props.props
+    return (
+        <ListItemContainer>
+        <div>
+          <span>{data}</span>
+          <strong>{description}</strong>
+        </div>
+        <Value color={type === "out" ? "negativo" : "positivo"}>{value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Value>
+      </ListItemContainer>
+    );
+};
+
+const ListItemContainer = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #000000;
+  margin-right: 10px;
+  div span {
+    color: #c6c6c6;
+    margin-right: 10px;
+  }
+`
+const Value = styled.div`
+  font-size: 16px;
+  text-align: right;
+  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+`
+export default Transaction;
