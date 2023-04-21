@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Transaction = (props) => {
-    const { data, description, type, value } = props.props
+const Transaction = ({ props }) => {
+    const { data, description, type, value } = props
     return (
         <ListItemContainer>
         <div>
