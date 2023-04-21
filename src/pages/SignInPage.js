@@ -75,7 +75,7 @@ export default function SignInPage() {
         <button>Entrar</button>
       </form>
 
-      <Link to="/signup">Primeira vez? Cadastre-se!</Link>
+      <Link to="/cadastro">Primeira vez? Cadastre-se!</Link>
     </SingInContainer>
   );
 }

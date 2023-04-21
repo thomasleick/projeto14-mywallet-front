@@ -6,7 +6,7 @@ export default function AuthRoute() {
     const navigate = useNavigate();
     const { auth } = useAuth();
     useEffect(() => {
-        if (auth) {
+        if (auth?.accessToken) {
             navigate('/home');
         }
     }, [])
