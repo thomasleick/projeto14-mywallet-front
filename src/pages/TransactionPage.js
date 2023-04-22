@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 const TRANSACTION_URL = '/transaction';
@@ -13,6 +13,7 @@ export default function TransactionsPage() {
   const [formattedValue, setFormattedValue] = useState('');
   const [backspacePressed, setBackspacePressed] = useState(false);
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
 
   function handleInputChange(event) {
     if (backspacePressed) {
@@ -66,10 +67,12 @@ export default function TransactionsPage() {
     event.preventDefault();
     const value = inputValue/100
     try {
-      const response = await axiosPrivate.post(`${TRANSACTION_URL}/${type}`, {value, description});
+      await axiosPrivate.post(`${TRANSACTION_URL}/${type}`, {value, description});
+      navigate('/home');
     }
     catch (err) {
       console.log(err);
+      alert('Algum erro aconteceu...')
     }
 
   }
