@@ -1,56 +1,79 @@
-import styled from "styled-components"
-import { BiExit } from "react-icons/bi"
-import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
-import Transaction from "../components/Transaction"
+import styled from "styled-components";
+import { BiExit } from "react-icons/bi";
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import Transaction from "../components/Transaction";
+import { useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
+const TRANSACTION_URL = '/transaction';
 
 export default function HomePage() {
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+  const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [total, setTotal] = useState('');
+  const name = auth.name;
+  const navigate = useNavigate();
 
-  const transactions = [
-    {
-      data: "30/11",
-      description: "Almoço mãe",
-      type: "out",
-      value: 120.00
-    },
-    {
-      data: "15/11",
-      description: "Salário",
-      type: "in",
-      value: 3000.00
+  const handleNewTransaction = newType => {
+    navigate(`/nova-transacao/${newType}`);
+  }
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axiosPrivate.get(TRANSACTION_URL);
+        setTransactions(response.data);
+        let newTotal = 0;
+        response?.data?.forEach(transaction => {
+          transaction.type === "in" ? 
+            newTotal += transaction.value 
+            : newTotal -= transaction.value
+        })
+        setTotal(newTotal)
+        setIsLoading(false);
+      }
+      catch (err) {
+        console.log(err);
+      }
     }
-  ]
-
+    fetchTransactions();
+  }, []);
 
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
+        <h1>Olá, {name}</h1>
         <BiExit />
       </Header>
 
       <TransactionsContainer>
-        <ul>
-          {transactions.map((transaction, id) => 
-            <Transaction 
-              key={`Transaction${id}`}
-              props = {transaction}
-            />
-          )}
-        </ul>
-
-        <article>
-          <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
-        </article>
+        {isLoading ? <p>Carregando...</p> : <>
+          <ul>
+            {transactions.map((transaction, id) =>
+              <Transaction
+                key={`Transaction${id}`}
+                props={transaction}
+              />
+            )}
+          </ul>
+          <article>
+            <strong>Saldo</strong>
+            <Value color={total >= 0 ? "positivo" : "negativo"}>{total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Value>
+          </article>
+        </>
+        }
       </TransactionsContainer>
 
-
       <ButtonsContainer>
-        <button>
+        <button onClick={() => handleNewTransaction("in")}>
           <AiOutlinePlusCircle />
           <p>Nova <br /> entrada</p>
         </button>
-        <button>
+        <button onClick={() => handleNewTransaction("out")}> 
           <AiOutlineMinusCircle />
           <p>Nova <br />saída</p>
         </button>

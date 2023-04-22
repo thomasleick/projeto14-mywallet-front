@@ -2,15 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Transaction = ({ props }) => {
-    const { data, description, type, value } = props
+
+    const { date, description, type, value } = props
     return (
         <ListItemContainer>
-        <div>
-          <span>{data}</span>
-          <strong>{description}</strong>
-        </div>
-        <Value color={type === "out" ? "negativo" : "positivo"}>{value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Value>
-      </ListItemContainer>
+            <div>
+                <span>{new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</span>
+                <strong>{description}</strong>
+            </div>
+            <Value color={type === "out" ? "negativo" : "positivo"}>{value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Value>
+        </ListItemContainer>
     );
 };
 
