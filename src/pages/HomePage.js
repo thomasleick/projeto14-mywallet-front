@@ -43,11 +43,15 @@ export default function HomePage() {
     fetchTransactions();
   }, []);
 
+  const handleLogout = event => {
+    event.preventDefault();
+    console.log("Logout...")
+  }
   return (
     <HomeContainer>
       <Header>
         <h1>Olá, {name}</h1>
-        <BiExit />
+        <BiExit onClick={handleLogout}/>
       </Header>
 
       <TransactionsContainer>

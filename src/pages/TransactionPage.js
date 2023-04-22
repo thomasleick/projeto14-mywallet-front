@@ -11,15 +11,12 @@ export default function TransactionsPage() {
   const [description, setDescription] = useState('')
   const [inputValue, setInputValue] = useState('');
   const [formattedValue, setFormattedValue] = useState('');
-  const [backspacePressed, setBackspacePressed] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
   function handleInputChange(event) {
-    if (backspacePressed) {
-      return;
-    }
-    const value = event.target.value.replace(",", "").replace(".", "");
+
+    const value = event.target.value.replace(/[,\.]/g, "");
   
     if (!/^\d{0,16}(\,\d{0,2})?$/.test(value)) {
       alert("Invalid input");
@@ -36,33 +33,6 @@ export default function TransactionsPage() {
     setFormattedValue(formattedInput);
   }
   
-  function handleKeyDown(event) {
-    // Check for backspace key
-    if (event.key === 'Backspace') {
-      setBackspacePressed(true);
-      if (inputValue <= 9) {
-        setInputValue("");
-        setFormattedValue("0,00");
-        return;
-      }
-      const newInputValue = inputValue.slice(0, -1);
-      setInputValue(newInputValue);
-      const floatInput = parseFloat(newInputValue) / 100;
-    
-    const formattedInput = floatInput.toLocaleString('pt-BR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    setFormattedValue(formattedInput);
-    }
-  }
-  
-  function handleKeyUp(event) {
-    if (event.key === 'Backspace') {
-      setBackspacePressed(false);
-    }
-  }
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const value = inputValue/100
@@ -90,8 +60,7 @@ export default function TransactionsPage() {
           required
           value={formattedValue}
           onChange={handleInputChange} 
-          onKeyDown={handleKeyDown}
-          onKeyUp={handleKeyUp}
+
         />
         <input
           placeholder="Descrição"
