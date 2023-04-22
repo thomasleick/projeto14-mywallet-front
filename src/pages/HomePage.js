@@ -7,9 +7,10 @@ import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 const TRANSACTION_URL = '/transaction';
+const LOGOUT_URL = '/logout';
 
 export default function HomePage() {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,9 +44,15 @@ export default function HomePage() {
     fetchTransactions();
   }, []);
 
-  const handleLogout = event => {
+  const handleLogout = async event => {
     event.preventDefault();
-    console.log("Logout...")
+    try {
+      await axiosPrivate.post(LOGOUT_URL);
+      setAuth('');
+    }
+    catch (err) {
+      console.log(err)
+    }
   }
   return (
     <HomeContainer>
