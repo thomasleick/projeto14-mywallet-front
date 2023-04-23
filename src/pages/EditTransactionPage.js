@@ -50,7 +50,7 @@ export default function EditTransactionPage() {
 
     return (
         <TransactionsContainer>
-            <h1>Nova {type === "in" ? "Entrada" : "Saída"}</h1>
+            <h1>Editar {type === "in" ? "Entrada" : "Saída"}</h1>
             <form onSubmit={handleSubmit}>
                 <input
                     placeholder="Valor"
