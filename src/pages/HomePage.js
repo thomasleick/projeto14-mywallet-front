@@ -68,6 +68,8 @@ export default function HomePage() {
               <Transaction
                 key={`Transaction${id}`}
                 props={transaction}
+                transactions={transactions}
+                setTransactions={setTransactions}
               />
             )}
           </ul>

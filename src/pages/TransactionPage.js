@@ -49,7 +49,7 @@ export default function TransactionsPage() {
 
   return (
     <TransactionsContainer>
-      <h1>Nova TRANSAÇÃO</h1>
+      <h1>Nova {type === "in" ? "Entrada" : "Saída"}</h1>
       <form onSubmit={handleSubmit}>
         <input
           placeholder="Valor"

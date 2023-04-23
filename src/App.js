@@ -3,10 +3,11 @@ import styled from "styled-components";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-import TransactionsPage from "./pages/TransactionPage";
+import TransactionPage from "./pages/TransactionPage";
 import AuthRoute from "./components/AuthRoute";
 import PersistLogin from "./components/PersistLogin";
 import RequireAuth from "./components/RequireAuth";
+import EditTransactionPage from "./pages/EditTransactionPage";
 
 export default function App() {
   return (
@@ -20,7 +21,8 @@ export default function App() {
         {/*<Route element={<PersistLogin />}>*/}
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<HomePage />} />
-            <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />
+            <Route path="/nova-transacao/:tipo" element={<TransactionPage />} />
+            <Route path="/editar-transacao" element={<EditTransactionPage />} />
           </Route>
         </Route>
       </Routes>
