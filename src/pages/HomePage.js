@@ -6,8 +6,29 @@ import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
+import ContentLoader from 'react-content-loader';
 const TRANSACTION_URL = '/transaction';
 const LOGOUT_URL = '/logout';
+
+const ListItemLoader = () => (
+<ContentLoader
+  speed={2}
+  width={270}
+  height={150}
+  viewBox="0 0 270 150"
+  backgroundColor="#f3f3f3"
+  foregroundColor="#ecebeb"
+>
+  <rect x="0" y="15" rx="3" ry="3" width="220" height="12" />
+  <circle cx="250" cy="30" r="12" />
+  <rect x="0" y="65" rx="3" ry="3" width="220" height="12" />
+  <circle cx="250" cy="80" r="12" />
+  <rect x="0" y="115" rx="3" ry="3" width="220" height="12" />
+  <circle cx="250" cy="130" r="12" />
+</ContentLoader>
+);
+
+
 
 export default function HomePage() {
   const { auth, setAuth } = useAuth();
@@ -62,7 +83,7 @@ export default function HomePage() {
       </Header>
 
       <TransactionsContainer>
-        {isLoading ? <p>Carregando...</p> : <>
+        {isLoading ? <LoaderContainer><ListItemLoader /></LoaderContainer>: <>
           <ul>
             {transactions.map((transaction, id) =>
               <Transaction
@@ -96,6 +117,10 @@ export default function HomePage() {
   )
 }
 
+const LoaderContainer = styled.span`
+  display: flex;
+  justify-content: center;
+`
 const HomeContainer = styled.div`
   display: flex;
   flex-direction: column;

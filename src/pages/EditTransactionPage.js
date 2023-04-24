@@ -17,23 +17,25 @@ export default function EditTransactionPage() {
     const navigate = useNavigate();
 
     function handleInputChange(event) {
-
-        const value = event.target.value.replace(/[,\.]/g, "");
-
+        const input = event.target;
+        const value = input.value.replace(/[,\.]/g, "");
+      
         if (!/^\d{0,16}(\,\d{0,2})?$/.test(value)) {
-            alert("Invalid input");
-            return;
+          alert("Invalid input");
+          return;
         }
-
+      
         const floatInput = parseFloat(value) / 100;
-        const formattedInput = floatInput.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
+        const formattedInput = floatInput.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
         });
-
+      
+        const cursorPos = input.selectionStart;
         setInputValue(value);
         setFormattedValue(formattedInput);
-    }
+        input.setSelectionRange(cursorPos, cursorPos);
+      }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
