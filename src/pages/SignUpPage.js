@@ -34,7 +34,6 @@ export default function SignUpPage() {
           withCredentials: true
         }
       );
-      console.log('Signed Up!!!')
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
