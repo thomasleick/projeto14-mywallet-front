@@ -4,7 +4,6 @@ import useRefreshToken from "../hooks/useRefreshToken";
 import useAuth from "../hooks/useAuth";
 import React from 'react';
 import Cookies from 'js-cookie';
-import jwt_decode from 'jwt-decode';
 import LoadingHomePage from "./LoadingHome";
 import LoadingPage from "./LoadingPage";
 
@@ -13,7 +12,6 @@ const PersistLogin = () => {
     const refresh = useRefreshToken()
     const { auth } = useAuth()
     const persist = true
-    const jwtCookie = document.cookie.split('; ').find(row => row.startsWith('jwt='));
 
     const jwt = Cookies.get('jwt');
 
