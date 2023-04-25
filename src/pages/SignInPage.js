@@ -67,6 +67,7 @@ export default function SignInPage() {
           pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$"
           autoComplete="off"
           {...emailAttribs}
+          disabled={isLoading}
         />
         <input
           placeholder="Senha"
@@ -76,6 +77,7 @@ export default function SignInPage() {
           minLength="3"
           value={pwd}
           onChange={handlePwdChange}
+          disabled={isLoading}
         />
         <button disabled={isLoading}>
           {isLoading ?

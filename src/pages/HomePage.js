@@ -49,13 +49,6 @@ export default function HomePage() {
       try {
         const response = await axiosPrivate.get(TRANSACTION_URL);
         setTransactions(response.data);
-        let newTotal = 0;
-        response?.data?.forEach(transaction => {
-          transaction.type === "in" ? 
-            newTotal += transaction.value 
-            : newTotal -= transaction.value
-        })
-        setTotal(newTotal)
         setIsLoading(false);
       }
       catch (err) {
@@ -64,6 +57,16 @@ export default function HomePage() {
     }
     fetchTransactions();
   }, []);
+
+  useEffect(() => {
+    let newTotal = 0;
+    transactions.forEach(transaction => {
+      transaction.type === "in" ? 
+        newTotal += transaction.value 
+        : newTotal -= transaction.value
+    })
+    setTotal(newTotal)
+  }, [transactions])
 
   const handleLogout = async event => {
     event.preventDefault();
