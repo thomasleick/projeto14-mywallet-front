@@ -11,6 +11,7 @@ export default function TransactionsPage() {
   const [description, setDescription] = useState('')
   const [inputValue, setInputValue] = useState('');
   const [formattedValue, setFormattedValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -37,13 +38,16 @@ export default function TransactionsPage() {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
     const value = inputValue/100
     try {
       await axiosPrivate.post(`${TRANSACTION_URL}/${type}`, {value, description});
+      setIsLoading(false);
       navigate('/home');
     }
     catch (err) {
       console.log(err);
+      setIsLoading(false);
       alert('Algum erro aconteceu...')
     }
 
@@ -61,7 +65,10 @@ export default function TransactionsPage() {
           max="100000000000000"
           required
           value={formattedValue}
-          onChange={handleInputChange} 
+          onChange={handleInputChange}
+          disabled={isLoading}
+          pattern="^(?!0+(?:,00?)?$)\d{1,3}(?:\.\d{3})*,\d{2}$"
+          title="Enter a positive float in the format (X,XX)"
 
         />
         <input
@@ -70,8 +77,9 @@ export default function TransactionsPage() {
           required
           value={description}
           onChange={e => setDescription(e.target.value)}
+          disabled={isLoading}
         />
-        <button>Salvar TRANSAÇÃO</button>
+        <button disabled={isLoading}>Salvar TRANSAÇÃO</button>
       </form>
     </TransactionsContainer>
   )

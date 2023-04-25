@@ -6,8 +6,9 @@ const TRANSACTION_URL = '/transaction';
 
 export default function EditTransactionPage() {
     const { state } = useLocation();
+    const [isLoading, setIsLoading] = useState(false);
     const [description, setDescription] = useState(state.description)
-    const [inputValue, setInputValue] = useState(state.value);
+    const [inputValue, setInputValue] = useState(state.value*100);
     const [formattedValue, setFormattedValue] = useState(state.value.toLocaleString('pt-BR', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -39,13 +40,16 @@ export default function EditTransactionPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
         const value = inputValue / 100
         try {
             await axiosPrivate.put(`${TRANSACTION_URL}/${state._id}`, { value, description });
+            setIsLoading(false);
             navigate('/home');
         }
         catch (err) {
             console.log(err);
+            setIsLoading(false);
             alert('Algum erro aconteceu...')
         }
     }
@@ -63,6 +67,9 @@ export default function EditTransactionPage() {
                     required
                     value={formattedValue}
                     onChange={handleInputChange}
+                    disabled={isLoading}
+                    pattern="^(?!0+(?:,00?)?$)\d{1,3}(?:\.\d{3})*,\d{2}$"
+                    title="Enter a positive float in the format (X,XX)"
                 />
                 <input
                     placeholder="Descrição"
@@ -70,8 +77,9 @@ export default function EditTransactionPage() {
                     required
                     value={description}
                     onChange={e => setDescription(e.target.value)}
+                    disabled={isLoading}
                 />
-                <button>Salvar TRANSAÇÃO</button>
+                <button disabled={isLoading}>Salvar TRANSAÇÃO</button>
             </form>
         </TransactionsContainer>
     )

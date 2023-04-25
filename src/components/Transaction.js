@@ -18,9 +18,8 @@ const Transaction = ({ props, transactions, setTransactions }) => {
 
   const handleDelete = async event => {
     event.preventDefault();
-    if (!window.confirm(`Deseja realmente deletar a transação 
-        ${description} no valor de ${type === "out" ? "-" : ""}
-        ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ?`))
+    if (!window.
+        confirm(`Deseja realmente deletar a transação ${description} no valor de ${type === "out" ? "-" : ""}${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}?`))
       return
 
     try {
