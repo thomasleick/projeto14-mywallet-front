@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from "styled-components";
 import MyWalletLogo from "../components/MyWalletLogo";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import axios from '../api/axios';
 import { ThreeDots } from 'react-loader-spinner';
 const REGISTER_URL = '/register';
@@ -13,11 +13,19 @@ export default function SignUpPage() {
   const [pwd, setPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
+  const errRef = useRef();
+
+  useEffect(() => {
+    setErrMsg('');
+  }, [name, email, pwd, confirmPwd])
 
   const checkPwd = () => { return pwd === confirmPwd }
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,16 +52,18 @@ export default function SignUpPage() {
     } catch (err) {
       setIsLoading(false);
       if (!err?.response) {
-        console.log('No Server Response');
+        setErrMsg('No Server Response');
       } else if (err.response?.status === 400) {
-        console.log('Missing Name, Email or Password');
+        setErrMsg('Missing Name, Email or Password');
       } else if (err.response?.status === 401) {
-        console.log('Unauthorized');
+        setErrMsg('Unauthorized');
       } else if (err.response?.status === 409) {
-        console.log('Conflict');
+        setErrMsg('Email already in use');
       } else {
-        console.log('Register Failed');
+        setErrMsg('Register Failed');
+        console.log(err);
       }
+      errRef.current.focus();
     }
   }
 
@@ -61,6 +71,7 @@ export default function SignUpPage() {
     <SingUpContainer>
       <form onSubmit={handleSubmit}>
         <MyWalletLogo />
+        <p ref={errRef} aria-live="assertive">{errMsg}</p>
         <input
           placeholder="Nome"
           type="text"
@@ -129,6 +140,17 @@ const SingUpContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  p {
+        width: 232px;
+        height: 24px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 17px;
+        text-align: center;
+        text-decoration-line: underline;
+        color: salmon;
+    }
 `
 const Span = styled.span`
     width: 100%;

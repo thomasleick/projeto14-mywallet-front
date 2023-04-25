@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import MyWalletLogo from "../components/MyWalletLogo";
@@ -14,9 +14,15 @@ export default function SignInPage() {
   const [email, resetEmail, emailAttribs] = useInput('email', '')
   const [pwd, setPwd] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
+  const errRef = useRef();
+
+  useEffect(() => {
+    setErrMsg('');
+  }, [email, pwd])
 
   const handlePwdChange = (event) => {
     setPwd(event.target.value);
@@ -45,13 +51,14 @@ export default function SignInPage() {
     } catch (err) {
       setIsLoading(false);
       if (!err?.response) {
-        console.log('No Server Response');
+        setErrMsg('No Server Response');
       } else if (err.response?.status === 400) {
-        console.log('Missing Username or Password');
+        setErrMsg('Missing Username or Password');
       } else if (err.response?.status === 401) {
-        console.log('Unauthorized');
+        setErrMsg('Unauthorized');
       } else {
-        console.log('Login Failed');
+        setErrMsg('Login Failed');
+        console.log(err);
       }
     }
   };
@@ -60,6 +67,7 @@ export default function SignInPage() {
     <SingInContainer>
       <form onSubmit={handleSubmit}>
         <MyWalletLogo />
+        <p ref={errRef} aria-live="assertive">{errMsg}</p>
         <input
           placeholder="E-mail"
           type="email"
@@ -107,6 +115,17 @@ const SingInContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  p {
+        width: 232px;
+        height: 24px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 17px;
+        text-align: center;
+        text-decoration-line: underline;
+        color: salmon;
+    }
 `;
 const Span = styled.span`
     width: 100%;

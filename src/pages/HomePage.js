@@ -11,21 +11,21 @@ const TRANSACTION_URL = '/transaction';
 const LOGOUT_URL = '/logout';
 
 const ListItemLoader = () => (
-<ContentLoader
-  speed={2}
-  width={270}
-  height={150}
-  viewBox="0 0 270 150"
-  backgroundColor="#f3f3f3"
-  foregroundColor="#ecebeb"
->
-  <rect x="0" y="15" rx="3" ry="3" width="220" height="12" />
-  <circle cx="250" cy="30" r="12" />
-  <rect x="0" y="65" rx="3" ry="3" width="220" height="12" />
-  <circle cx="250" cy="80" r="12" />
-  <rect x="0" y="115" rx="3" ry="3" width="220" height="12" />
-  <circle cx="250" cy="130" r="12" />
-</ContentLoader>
+  <ContentLoader
+    speed={2}
+    width={270}
+    height={150}
+    viewBox="0 0 270 150"
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+  >
+    <rect x="0" y="15" rx="3" ry="3" width="220" height="12" />
+    <circle cx="250" cy="30" r="12" />
+    <rect x="0" y="65" rx="3" ry="3" width="220" height="12" />
+    <circle cx="250" cy="80" r="12" />
+    <rect x="0" y="115" rx="3" ry="3" width="220" height="12" />
+    <circle cx="250" cy="130" r="12" />
+  </ContentLoader>
 );
 
 
@@ -61,8 +61,8 @@ export default function HomePage() {
   useEffect(() => {
     let newTotal = 0;
     transactions.forEach(transaction => {
-      transaction.type === "in" ? 
-        newTotal += transaction.value 
+      transaction.type === "in" ?
+        newTotal += transaction.value
         : newTotal -= transaction.value
     })
     setTotal(newTotal)
@@ -82,26 +82,28 @@ export default function HomePage() {
     <HomeContainer>
       <Header>
         <h1>Olá, {name}</h1>
-        <BiExit onClick={handleLogout}/>
+        <BiExit onClick={handleLogout} />
       </Header>
 
       <TransactionsContainer>
-        {isLoading ? <LoaderContainer><ListItemLoader /></LoaderContainer>: <>
-          <ul>
-            {transactions.map((transaction, id) =>
-              <Transaction
-                key={`Transaction${id}`}
-                props={transaction}
-                transactions={transactions}
-                setTransactions={setTransactions}
-              />
-            )}
-          </ul>
-          <article>
-            <strong>Saldo</strong>
-            <Value color={total >= 0 ? "positivo" : "negativo"}>{total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Value>
-          </article>
-        </>
+        {isLoading && <LoaderContainer><ListItemLoader /></LoaderContainer>}
+        {!isLoading && !transactions.length ? <p>Sem dados para carregar...</p> :
+          <>
+            <ul>
+              {transactions.map((transaction, id) =>
+                <Transaction
+                  key={`Transaction${id}`}
+                  props={transaction}
+                  transactions={transactions}
+                  setTransactions={setTransactions}
+                />
+              )}
+            </ul>
+            <article>
+              <strong>Saldo</strong>
+              <Value color={total >= 0 ? "positivo" : "negativo"}>{total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Value>
+            </article>
+          </>
         }
       </TransactionsContainer>
 
@@ -110,7 +112,7 @@ export default function HomePage() {
           <AiOutlinePlusCircle />
           <p>Nova <br /> entrada</p>
         </button>
-        <button onClick={() => handleNewTransaction("out")}> 
+        <button onClick={() => handleNewTransaction("out")}>
           <AiOutlineMinusCircle />
           <p>Nova <br />saída</p>
         </button>
@@ -139,6 +141,7 @@ const Header = styled.header`
   color: white;
 `
 const TransactionsContainer = styled.article`
+  position: relative;
   flex-grow: 1;
   background-color: #fff;
   color: #000;
@@ -154,6 +157,17 @@ const TransactionsContainer = styled.article`
       font-weight: 700;
       text-transform: uppercase;
     }
+  }
+  p {
+    font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 17px;
+        text-align: center;
+        width: 320px;
+        height: 20px;
+        position: absolute;
+        top: calc(50% - 10px);
   }
 `
 const ButtonsContainer = styled.section`

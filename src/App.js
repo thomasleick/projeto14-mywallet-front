@@ -18,11 +18,11 @@ export default function App() {
           <Route path="/" element={<SignInPage />} exact />
           <Route path="/cadastro" element={<SignUpPage />} />
         </Route>
-        {/*<Route element={<PersistLogin />}>*/}
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<HomePage />} />
             <Route path="/nova-transacao/:tipo" element={<TransactionPage />} />
             <Route path="/editar-transacao" element={<EditTransactionPage />} />
+            <Route path="*" element={<HomePage />} />
           </Route>
         </Route>
       </Routes>
