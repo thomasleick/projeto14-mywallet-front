@@ -6,12 +6,14 @@ import MyWalletLogo from "../components/MyWalletLogo";
 import useInput from '../hooks/useInput';
 import useAuth from '../hooks/useAuth';
 import axios from '../api/axios';
+import { ThreeDots } from 'react-loader-spinner';
 const LOGIN_URL = '/login';
 
 export default function SignInPage() {
   const { setAuth } = useAuth();
   const [email, resetEmail, emailAttribs] = useInput('email', '')
   const [pwd, setPwd] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
@@ -22,6 +24,7 @@ export default function SignInPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       const response = await axios.post(LOGIN_URL,
         JSON.stringify({ email, pwd }),
@@ -37,8 +40,10 @@ export default function SignInPage() {
       setAuth({ name, email, id, accessToken });
       resetEmail()
       setPwd('');
+      setIsLoading(false);
       navigate(from, { replace: true });
     } catch (err) {
+      setIsLoading(false);
       if (!err?.response) {
         console.log('No Server Response');
       } else if (err.response?.status === 400) {
@@ -72,7 +77,21 @@ export default function SignInPage() {
           value={pwd}
           onChange={handlePwdChange}
         />
-        <button>Entrar</button>
+        <button disabled={isLoading}>
+          {isLoading ?
+            <Span><ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#FFFFFF"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            /></Span>
+            :
+            "Entrar"}
+        </button>
       </form>
 
       <Link to="/cadastro">Primeira vez? Cadastre-se!</Link>
@@ -87,3 +106,12 @@ const SingInContainer = styled.section`
   justify-content: center;
   align-items: center;
 `;
+const Span = styled.span`
+    width: 100%;
+    height: 24px;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`

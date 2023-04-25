@@ -3,27 +3,32 @@ import styled from "styled-components";
 import MyWalletLogo from "../components/MyWalletLogo";
 import { useState } from "react";
 import axios from '../api/axios';
+import { ThreeDots } from 'react-loader-spinner';
 const REGISTER_URL = '/register';
 
 export default function SignUpPage() {
 
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [pwd, setPwd] = useState("")
-  const [confirmPwd, setConfirmPwd] = useState("")
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
 
   const checkPwd = () => { return pwd === confirmPwd }
-  
+
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
+    setIsLoading(true);
 
     if (!checkPwd()) {
       setPwd("");
       setConfirmPwd("");
-      return alert("As senhas digitadas não conferem...");
+      alert("As senhas digitadas não conferem...");
+      setIsLoading(false);
+      return;
     }
 
     try {
@@ -34,8 +39,10 @@ export default function SignUpPage() {
           withCredentials: true
         }
       );
+      setIsLoading(false);
       navigate(from, { replace: true });
     } catch (err) {
+      setIsLoading(false);
       if (!err?.response) {
         console.log('No Server Response');
       } else if (err.response?.status === 400) {
@@ -61,6 +68,7 @@ export default function SignUpPage() {
           minLength={1}
           onChange={(e) => setName(e.target.value)}
           required
+          disabled={isLoading}
         />
         <input
           placeholder="E-mail"
@@ -69,6 +77,7 @@ export default function SignUpPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          disabled={isLoading}
         />
         <input
           placeholder="Senha"
@@ -78,6 +87,7 @@ export default function SignUpPage() {
           onChange={(e) => setPwd(e.target.value)}
           minLength={3}
           required
+          disabled={isLoading}
         />
         <input
           placeholder="Confirme a senha"
@@ -87,8 +97,23 @@ export default function SignUpPage() {
           onChange={(e) => setConfirmPwd(e.target.value)}
           minLength={3}
           required
+          disabled={isLoading}
         />
-        <button>Cadastrar</button>
+        <button disabled={isLoading}>
+          {isLoading ?
+            <Span><ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#FFFFFF"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            /></Span>
+            :
+            "Cadastrar"}
+        </button>
       </form>
 
       <Link to="/">
@@ -104,4 +129,13 @@ const SingUpContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+const Span = styled.span`
+    width: 100%;
+    height: 24px;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
